@@ -12,10 +12,19 @@ mongoose.connect('mongodb+srv://tharinduprabashwara71:30cR6zXOzQNlfdPO@cluster20
   useUnifiedTopology: true
 });
 
+
 // Define Activity schema
 const activitySchema = new mongoose.Schema({
   userId: String,
   url: String,
+  browser: String,
+  screenWidth: String,
+  screenHeight: String,
+  country: String,
+  region: String,
+  city: String,
+  latitude: String,
+  longitude: String,
   timestamp: { type: Date, default: Date.now }
 });
 
@@ -29,12 +38,20 @@ app.use(cors()); // Enable CORS for all routes
 // API endpoint to receive activity data
 app.post('/api/activity', async (req, res) => {
   try {
-    const { userId, url } = req.body;
+    const { userId, url, browser, screenWidth, screenHeight, country, region, city, latitude, longitude } = req.body;
 
     // Create new activity document
     const activity = new Activity({
       userId,
-      url
+      url,
+      browser,
+      screenWidth,
+      screenHeight,
+      country,
+      region,
+      city,
+      latitude,
+      longitude
     });
 
     // Save activity to MongoDB
