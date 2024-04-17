@@ -66,29 +66,22 @@ app.post('/api/activity', async (req, res) => {
   }
 });
 
-// Define searchActvity schema
-const searchActvitySchema = new mongoose.Schema({
-  userId: String,
-});
-
-const searchActvity = mongoose.model('searchActvity', searchActvitySchema);
-
-
 // API endpoint to check if userId exists
 app.get('/api/searchUserId', async (req, res) => {
   const { userId } = req.query;
 
   try {
-      const existingUser = await searchActvity.findOne({ userId });
+    // Check if userId exists in the Activity collection
+    const existingUser = await Activity.findOne({ userId });
 
-      if (existingUser) {
-          res.status(200).json({ exists: true });
-      } else {
-          res.status(200).json({ exists: false });
-      }
+    if (existingUser) {
+      res.status(200).json({ exists: true, message: 'User ID exists in Activity collection' });
+    } else {
+      res.status(200).json({ exists: false, message: 'User ID does not exist in Activity collection' });
+    }
   } catch (error) {
-      console.error('Error checking user ID:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error checking user ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
