@@ -15,6 +15,7 @@ mongoose.connect('mongodb+srv://tharinduprabashwara71:30cR6zXOzQNlfdPO@cluster20
 
 // Define Activity schema
 const activitySchema = new mongoose.Schema({
+  userIP: String,
   userId: String,
   url: String,
   browser: String,
@@ -38,10 +39,11 @@ app.use(cors()); // Enable CORS for all routes
 // API endpoint to receive activity data
 app.post('/api/activity', async (req, res) => {
   try {
-    const { userId, url, browser, screenWidth, screenHeight, country, region, city, latitude, longitude } = req.body;
+    const { userIP, userId, url, browser, screenWidth, screenHeight, country, region, city, latitude, longitude } = req.body;
 
     // Create new activity document
     const activity = new Activity({
+      userIP,
       userId,
       url,
       browser,
@@ -63,6 +65,34 @@ app.post('/api/activity', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+// Define searchActvity schema
+const searchActvitySchema = new mongoose.Schema({
+  userId: String,
+});
+
+const searchActvity = mongoose.model('searchActvity', searchActvitySchema);
+
+
+// API endpoint to check if userId exists
+app.get('/api/searchUserId', async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+      const existingUser = await searchActvity.findOne({ userId });
+
+      if (existingUser) {
+          res.status(200).json({ exists: true });
+      } else {
+          res.status(200).json({ exists: false });
+      }
+  } catch (error) {
+      console.error('Error checking user ID:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 // Start server
 app.listen(PORT, () => {

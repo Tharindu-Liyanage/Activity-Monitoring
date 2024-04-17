@@ -1,27 +1,44 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === 'activity') {
-      const { userId, url } = message.data;
-      
-      // Send activity data to backend API
-      fetch('http://localhost:3000/api/activity', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId, url })
-      })
-      .then(response => {
-        console.log('Activity logged successfully');
-      })
-      .catch(error => {
-        console.error('Error logging activity:', error);
-      });
-    }
-  });
+
   // Background script
-chrome.runtime.onInstalled.addListener(() => {
-    console.log('Extension installed');
+
+  
+// Generate UUID function
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0,
+          v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
   });
+}
+
+// Event listener for extension installation or startup
+chrome.runtime.onInstalled.addListener(() => {
+  console.log('Extension installed or updated');
+
+      chrome.storage.local.get('extensionUserId', (data) => {
+        if (chrome.runtime.lastError) {
+            console.error('Error getting data:', chrome.runtime.lastError);
+            return;
+        }
+
+        if (!data.extensionUserId) {
+            const userId = generateUUID();
+            chrome.storage.local.set({ 'extensionUserId': userId }, () => {
+                if (chrome.runtime.lastError) {
+                    console.error('Error setting data:', chrome.runtime.lastError);
+                    return;
+                }
+                console.log('User ID:', userId);
+            });
+        }
+    });
+
+
+
+});
+
+
+
   
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
