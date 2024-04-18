@@ -13,7 +13,7 @@ function generateUUID() {
 
 // Event listener for extension installation or startup
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Extension installed or updated');
+  console.log('Extension installed');
 
   // Retrieve existing extensionUserId from local storage
   chrome.storage.local.get('extensionUserId', (data) => {
