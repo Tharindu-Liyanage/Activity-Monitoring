@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Activity Monitor",
   "version": "1.0",
-  "description": "Monitors user activity and sends data to MongoDB Atlas.",
+  "description": "Monitors user activity.",
   "permissions": [
     "tabs",
     "activeTab",

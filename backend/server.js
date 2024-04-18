@@ -9,8 +9,10 @@ const PORT = process.env.PORT || 3000;
 // Connect to MongoDB Atlas (replace with your MongoDB URI)
 mongoose.connect('mongodb+srv://tharinduprabashwara71:30cR6zXOzQNlfdPO@cluster20.xpnm4wu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster20', {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
+
+
 
 
 // Define Activity schema
@@ -26,7 +28,7 @@ const activitySchema = new mongoose.Schema({
   city: String,
   latitude: String,
   longitude: String,
-  timestamp: { type: Date, default: Date.now }
+  timestamp: { type: String, default: getISTDateTime() }
 });
 
 const Activity = mongoose.model('Activity', activitySchema);
@@ -85,6 +87,12 @@ app.get('/api/searchUserId', async (req, res) => {
   }
 });
 
+// Function to get current time in IST
+function getISTDateTime() {
+  const date = new Date();
+  const options = { timeZone: 'Asia/Colombo', hour12: false };
+  return date.toLocaleString('en-IN', options);
+}
 
 
 // Start server
