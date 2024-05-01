@@ -28,7 +28,7 @@ const activitySchema = new mongoose.Schema({
   city: String,
   latitude: String,
   longitude: String,
-  timestamp: { type: String, default: getISTDateTime() }
+  timestamp: String
 });
 
 const Activity = mongoose.model('Activity', activitySchema);
@@ -55,7 +55,8 @@ app.post('/api/activity', async (req, res) => {
       region,
       city,
       latitude,
-      longitude
+      longitude,
+      timestamp: getISTDateTime()
     });
 
     // Save activity to MongoDB
